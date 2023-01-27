@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     
     'Taskify_auth',
+    'Taskify_main',
 ]
 
 MIDDLEWARE = [

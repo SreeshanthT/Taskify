@@ -7,7 +7,9 @@ from django.apps import apps as django_apps
 from django.contrib.contenttypes.models import ContentType 
 from django.shortcuts import get_object_or_404
 
-from django_lifecycle import LifecycleModelMixin
+from django_lifecycle import (
+    LifecycleModelMixin, hook, AFTER_CREATE, AFTER_SAVE, BEFORE_SAVE, BEFORE_CREATE
+)
 
 
 import datetime
@@ -57,6 +59,7 @@ class CustomQuerySet(models.QuerySet):
     
 class BaseContent(LifecycleModelMixin, models.Model):
     display_name = 'name'
+    slug_field = 'name'
 
     active = models.BooleanField('Status', default=True, choices=(
         (False, 'Inactive'),
@@ -65,6 +68,7 @@ class BaseContent(LifecycleModelMixin, models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     modified_on = models.DateTimeField(auto_now=True)
     display_order = models.PositiveIntegerField(default=0)
+    slug = models.SlugField(blank=True,max_length=255,db_index=True)
     objects = CustomQuerySet.as_manager()
 
     class Meta:
@@ -108,7 +112,14 @@ class BaseContent(LifecycleModelMixin, models.Model):
         if self.active:
             return "Active"
         return "Inactive"
-    
+
+    @hook(BEFORE_CREATE)
+    def slug_generator(self):
+        slug_data = getattr(self, self.slug_field, '') or self.id
+        self.slug = unique_slug_generator(self, slug_data)
+        # self.save()
+
+
 def random_string_generator(size = 10, chars = string.ascii_lowercase + string.digits): 
     return ''.join(random.choice(chars) for _ in range(size))
    
