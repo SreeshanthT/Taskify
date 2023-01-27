@@ -6,7 +6,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 
 from Taskify.utils import get_object_or_none
-from Taskify_main.models import Projects
+from Taskify_main.models import Projects, TasksLists
 from Taskify_main.serializers import ProjectSerializers
 
 # Create your views here.
@@ -33,4 +33,7 @@ class ProjectsView(APIView):
     def get_queryset(self):
         return Projects.objects.all()
 
-    
+class ListView(APIView):
+    queryset = TasksLists.objects.all()
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
