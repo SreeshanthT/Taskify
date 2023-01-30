@@ -26,3 +26,7 @@ class User(LifecycleModelMixin,AbstractUser):
     @hook(BEFORE_CREATE)
     def set_slug(self):
         self.slug = unique_slug_generator(self,self.username)
+        
+    @property
+    def full_name(self):
+        return f"{self.first_name or ''} {self.last_name or ''}"
