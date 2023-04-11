@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('Taskify_auth.urls')),
     path('api/', include('Taskify_main.urls')),
+    path('docs/', include('dj_docs.urls')),
 ]

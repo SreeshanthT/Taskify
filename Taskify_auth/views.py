@@ -15,11 +15,13 @@ from Taskify_auth.serializers import UserSerializers, RegisterSerializer, GroupS
 
 # Create your views here.
 
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializers
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated, DjangoModelPermissions]
+
 
 class GroupsViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
@@ -27,9 +29,29 @@ class GroupsViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated, DjangoModelPermissions]
 
-class CustomAuthToken(ObtainAuthToken):
 
+class CustomAuthToken(ObtainAuthToken):
+    """
+    A custom token authentication view that extends the ObtainAuthToken view.
+
+    Methods:
+        post: Obtain a token for a given user.
+
+    Attributes:
+        serializer_class: The serializer class to use for obtaining a token.
+    """
     def post(self, request, *args, **kwargs):
+        """
+        Obtain a token for a given user.
+
+        Args:
+            request: The HTTP request object.
+            args: Any additional positional arguments.
+            kwargs: Any additional keyword arguments.
+
+        Returns:
+            A Response object containing the token, user ID, and email address.
+        """
         serializer = self.serializer_class(data=request.data,
             context={'request': request})
         serializer.is_valid(raise_exception=True)

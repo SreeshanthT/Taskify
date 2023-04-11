@@ -19,6 +19,10 @@ class ProjectsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self,request,*args,**kwargs):
+        """
+        list projects: list all the projects with task lists includes
+            the project individually
+        """
         project = get_object_or_none(Projects,slug = kwargs.get('project_slug'))
         if project:
             return Response(ProjectGlobalSerializers(project, many = False).data)
