@@ -1,0 +1,18 @@
+<div class="input-group">
+    <select style="display:inline;" class="form-control" name="{{modal_raw.modal_select_name}}" id="{{modal_raw.modal_select_id}}" required>
+        {% for i in modal_raw.modal_select_set %}
+            <option 
+                {% if first_div.id == i.id %}selected{% endif %} 
+                value="{{i.id}}">{{i}}
+            </option>
+        {% endfor %}
+    </select>
+    <span class="input-group-btn input-group-append">
+        <button  type="button" 
+            class="btn btn-light bootstrap-touchspin-up" 
+            data-bs-toggle="modal" 
+            data-bs-target="#add-modal-form">
+            <i style="color:#0acf97" class="dripicons-plus"></i>
+        </button>
+    </span>
+</div>

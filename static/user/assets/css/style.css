@@ -1,0 +1,16 @@
+@media (max-width: 767.98px){
+    .card-header .page-title-box .page-title-right {
+        display: block;
+        float:initial;
+    }
+    /* .page-title-box .breadcrumb {
+        display: block;
+    } */
+}
+
+/* @media (max-width: 419px){
+
+    .page-title-box .breadcrumb {
+        display: block;
+    }
+} */
