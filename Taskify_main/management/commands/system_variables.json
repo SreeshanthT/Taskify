@@ -1,0 +1,30 @@
+[
+  {
+    "code": "system_title",
+    "title": "Title for system",
+    "value": "Taskify"
+  },
+  {
+    "code": "logo",
+    "title": "System Logo",
+    "value": ""
+  },
+  {
+    "code": "powered_by",
+    "title": "Powered by",
+    "value": "Sreeshanth Thekkedath"
+  },
+  {
+    "code": "powered_by_url",
+    "title": "Powered by URL",
+    "value": ""
+  },
+  {
+    "code": "system_year",
+    "title": "Footer Year view",
+    "value": "2023"
+  },
+  {
+    "code"
+  }
+]

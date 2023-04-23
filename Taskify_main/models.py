@@ -17,6 +17,18 @@ PRIORITY_CHOICES = (
 )
 
 
+class SystemVariables(BaseContent):
+    code = models.CharField(max_length=100, unique=True)
+    title = models.CharField("Title", max_length=100)
+    value = models.TextField("Value", max_length=1000)
+
+    class Meta:
+        unique_together = ["code", "title", "value"]
+
+    def __str__(self):
+        return f"{self.title}: {self.value}"
+
+
 class Projects(BaseContent):
     name = models.CharField("Project Name", max_length=100)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)

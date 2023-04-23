@@ -12,7 +12,7 @@ from django_lifecycle import (
 )
 
 
-import datetime
+import re
 import random
 import string
 import json
@@ -113,11 +113,11 @@ class BaseContent(LifecycleModelMixin, models.Model):
             return "Active"
         return "Inactive"
 
-    @hook(BEFORE_CREATE)
+    @hook(AFTER_CREATE)
     def slug_generator(self):
-        slug_data = getattr(self, self.slug_field, '') or self.id
+        slug_data = getattr(self, self.slug_field, '') or string_manipulation(self.__str__()) or self.id
         self.slug = unique_slug_generator(self, slug_data)
-        # self.save()
+        self.save()
 
 
 def random_string_generator(size = 10, chars = string.ascii_lowercase + string.digits): 
@@ -143,3 +143,8 @@ def get_object_or_none(query, **kwargs):
         return get_object_or_404(query, **kwargs)
     except:
         return None
+
+
+def string_manipulation(my_string, replace="!?: ,"):
+    replacer = r"[" + replace + "]"
+    return re.sub(replacer, "_", my_string).rstrip("_").lower()

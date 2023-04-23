@@ -3,7 +3,7 @@
     {% load static %}
     <head>
         <meta charset="utf-8" />
-        <title>{% block title %}Dashboard{% endblock %} | Pygmalion</title>
+        <title>{% block title %}Dashboard{% endblock %} | {{system_title}}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
         <meta content="Coderthemes" name="author" />
@@ -543,6 +543,9 @@
         <div class="rightbar-overlay"></div>
         <!-- /End-bar -->
 
+        <!--    Constants    -->
+        {% include 'js_constants.html' %}
+
         <!-- bundle -->
         <script src="{% static 'user/assets' %}/js/vendor.min.js"></script>
         <script src="{% static 'user/assets' %}/js/app.min.js"></script>
@@ -552,12 +555,14 @@
         <script src="{% static 'user/assets' %}/js/vendor/jquery-jvectormap-world-mill-en.js"></script>
         <!-- third party js ends -->
 
-        {% block extra_js_plug %}
         <script src="{% static 'user/assets' %}/js/vendor/apexcharts.min.js"></script>
         <!-- demo app -->
         <script src="{% static 'user/assets' %}/js/pages/demo.dashboard.js"></script>
         <!-- end demo js-->
+
+        {% block extra_js_plug %}
         {% endblock %}
+
         <script>
             // $('.collapse').removeClass('show')
             // $('.side-nav-item').removeClass('menuitem-active')
