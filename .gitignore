@@ -131,3 +131,4 @@ dmypy.json
 # migrations
 */migrations/*
 !*/migrations/__init__.py
+!static/user/vendors/bootstrap-sweetalert/dist
