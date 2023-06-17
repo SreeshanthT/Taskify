@@ -1,0 +1,48 @@
+{% extends "dashboard.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+
+    {% include "root_links.html" %}
+
+    <div class="row">
+        <div class="col-12">
+            <form class="card" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body">
+                    {% include "basic_form.html" with form=form %}
+                </div>
+                <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-primary" id="formSubmit">Submit</button>
+                    <a href="" class="btn btn-light">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_js_plug %}
+<script src="{% static 'user/assets' %}/js/vendor/dropzone.min.js"></script>
+<script src="{% static 'user/assets' %}/js/ui/component.fileupload.js"></script>
+{% endblock %}
+{% block extra_js %}
+<script>
+    $(document).on("submit", function(event){
+        event.preventDefault();
+        swal({
+            title: "Are you sure?",
+            text: "Do you want to process!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-primary",
+            confirmButtonText: "Submit",
+        }, (isConfirm)=>{
+            if (!isConfirm) return;
+            $(this).off('submit');
+            $("#formSubmit").click();
+        })
+    })
+</script>
+{% endblock extra_js %}

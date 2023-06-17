@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Taskify_auth.urls')),
     path('api/', include('Taskify_api.urls')),
+    path('', include('Taskify_main.urls')),
 ]
 
 if settings.DEBUG:

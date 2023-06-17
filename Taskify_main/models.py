@@ -31,7 +31,17 @@ class SystemVariables(BaseContent):
 
 class Projects(BaseContent):
     name = models.CharField("Project Name", max_length=100)
+    description = models.TextField("description", blank=True, null=True)
+    secondary_avatar = models.FileField(upload_to="avatar", null=True)
+    primary_avatar = models.FileField("Avatar", upload_to="avatar", blank=True, null=True,
+        help_text="Recommended thumbnail size 800x400 (px)."
+    )
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+    def get_avatar_url(self):
+        if self.primary_avatar:
+            return self.primary_avatar.url
+        return self.secondary_avatar.url
 
 
 class TasksLists(BaseContent):
@@ -43,13 +53,13 @@ class TasksLists(BaseContent):
 
 class Task(BaseContent):
     task_list = models.ForeignKey(TasksLists, on_delete=models.CASCADE, null=True, related_name='tasks')
-    name = models.CharField("Title",max_length=255)
-    description = models.TextField("Description",null=True,blank=True)
+    name = models.CharField("Title", max_length=255)
+    description = models.TextField("Description", null=True, blank=True)
     assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     due_date = models.DateField(null=True, blank=True)
-    status = models.CharField(max_length=100, choices=STATUS_CHOICES,default='no_progress')
-    priority = models.CharField(max_length=100, choices=PRIORITY_CHOICES,null=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_tasks',null=True)
+    status = models.CharField(max_length=100, choices=STATUS_CHOICES, default='no_progress')
+    priority = models.CharField(max_length=100, choices=PRIORITY_CHOICES, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_tasks', null=True)
 
 
 class TaskAttachments(BaseContent):

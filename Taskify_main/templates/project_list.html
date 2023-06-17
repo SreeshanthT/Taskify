@@ -1,0 +1,44 @@
+{% extends "dashboard.html" %}
+
+{% block content %}
+<div class="container-fluid">
+
+    {% include "root_links.html" %}
+
+    <div class="row mb-2">
+        <div class="col-sm-4">
+            <a href="{% url 'main:project_add' %}" class="btn btn-danger rounded-pill mb-3">
+                <i class="mdi mdi-plus"></i> Create Project
+            </a>
+        </div>
+        <div class="col-sm-8">
+            <div class="text-sm-end">
+                <div class="btn-group mb-3">
+                    <button type="button" class="btn btn-primary">All</button>
+                </div>
+                <div class="btn-group mb-3 ms-1">
+                    <button type="button" class="btn btn-light">Ongoing</button>
+                    <button type="button" class="btn btn-light">Finished</button>
+                </div>
+                <div class="btn-group mb-3 ms-2 d-none d-sm-inline-block">
+                    <button type="button" class="btn btn-secondary"><i class="dripicons-view-apps"></i></button>
+                </div>
+                <div class="btn-group mb-3 d-none d-sm-inline-block">
+                    <button type="button" class="btn btn-link text-muted"><i class="dripicons-checklist"></i></button>
+                </div>
+            </div>
+        </div><!-- end col-->
+    </div>
+    <!-- end row-->
+
+    <div class="row">
+        {% if object_list %}
+            {% include "project_grid.html" with projects=object_list %}
+        {% else %}
+            <h1>No Data Found</h1>
+        {% endif %}
+    </div>
+    <!-- end row-->
+
+</div>
+{% endblock content %}

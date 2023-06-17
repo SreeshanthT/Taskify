@@ -1,3 +1,5 @@
+import os.path
+
 from django.http import Http404
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core import serializers
@@ -6,16 +8,19 @@ from django.db import models
 from django.apps import apps as django_apps
 from django.contrib.contenttypes.models import ContentType 
 from django.shortcuts import get_object_or_404
+from django.conf import settings
 
 from django_lifecycle import (
     LifecycleModelMixin, hook, AFTER_CREATE, AFTER_SAVE, BEFORE_SAVE, BEFORE_CREATE
 )
 
+from PIL import Image, ImageDraw, ImageFont
 
 import re
 import random
 import string
 import json
+
 
 class ManageBaseView(object):
     method_name = None
@@ -52,11 +57,13 @@ class ManageBaseView(object):
         except EmptyPage:
             items = paginator.page(paginator.num_pages)
         return items
-    
+
+
 class CustomQuerySet(models.QuerySet):
     def only_active(self, **kwargs):
         return self.filter(active=True, **kwargs)
-    
+
+
 class BaseContent(LifecycleModelMixin, models.Model):
     display_name = 'name'
     slug_field = 'name'
@@ -120,8 +127,58 @@ class BaseContent(LifecycleModelMixin, models.Model):
         self.save()
 
 
+class AvatarGenerator:
+    def __init__(self, title="AVATAR", bg_color="", size=(800, 400), directory="temp", *args, **kwargs):
+        self.title = title
+        self.bg_color = bg_color
+        self.size = size
+        self.height = size[0]
+        self.width = size[1]
+        self.directory = directory
+        self.font = ImageFont.truetype("/home/reizend/Projects/test/Taskify/Taskify/arial.ttf", 100)
+
+    def get_image_char(self):
+        return ''.join(self.title.split())[:2]
+
+    def create_img_with_random_background(self, color):
+        return Image.new("RGB", self.size, color)
+
+    def get_random_colors(self):
+        return random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
+
+    def get_file_name(self):
+        return f"{self.get_image_char()}_avatar.png"
+
+    def get_file_path(self):
+        dir_path = os.path.join(settings.MEDIA_ROOT, self.directory)
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+        return os.path.join(dir_path, self.get_file_name())
+
+    def get_context_root(self):
+        return os.path.join(self.directory, self.get_file_name())
+
+    def generate(self):
+        # Draw the initials on the image
+
+        color = self.get_random_colors()
+        img = self.create_img_with_random_background(color)
+        initials = self.get_image_char()
+
+        draw = ImageDraw.Draw(img)
+        text_size = draw.textsize(initials, font=self.font)
+        text_position = ((self.size[0] - text_size[0]) / 2, (self.size[1] - text_size[1]) / 2)
+        draw.text(text_position, initials, font=self.font, fill=(255, 255, 255))
+
+        # Save the image
+        file_path = self.get_file_path()
+        img.save(file_path)
+        return self.get_context_root()
+
+
 def random_string_generator(size = 10, chars = string.ascii_lowercase + string.digits): 
     return ''.join(random.choice(chars) for _ in range(size))
+
    
 def unique_slug_generator(instance,slugField, new_slug = None, size=4): 
     if new_slug is not None: 
@@ -136,7 +193,8 @@ def unique_slug_generator(instance,slugField, new_slug = None, size=4):
             slug = slug, randstr = random_string_generator(size = size)) 
               
         return unique_slug_generator(instance,slugField, new_slug = new_slug) 
-    return slug 
+    return slug
+
 
 def get_object_or_none(query, **kwargs):
     try:
